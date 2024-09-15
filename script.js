@@ -3,7 +3,7 @@ window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogn
 
 if (window.SpeechRecognition) {
   const recognition = new window.SpeechRecognition();
-  recognition.continuous = true; // Enable continuous listening
+  recognition.continuous = false; // Set to false to control when recognition starts
   recognition.interimResults = true; // Enable interim results
 
   let isListening = false;
@@ -23,8 +23,8 @@ if (window.SpeechRecognition) {
   startButton.addEventListener('click', () => {
     if (isListening) {
       // Stop listening
-      recognition.stop();
       isListening = false;
+      recognition.abort();
       listeningStatus.textContent = 'No';
       startButton.textContent = 'Start Listening';
     } else {
@@ -42,11 +42,17 @@ if (window.SpeechRecognition) {
   });
 
   function startRecognition() {
-    recognition.start();
-    listeningStatus.textContent = 'Yes';
-    startButton.textContent = 'Stop Listening';
-    messageElement.textContent = '';
+    if (isListening && !isPaused) {
+      recognition.start();
+      listeningStatus.textContent = 'Yes';
+      startButton.textContent = 'Stop Listening';
+      messageElement.textContent = '';
+    }
   }
+
+  recognition.onstart = () => {
+    console.log('Speech recognition started');
+  };
 
   recognition.onresult = (event) => {
     let transcript = '';
@@ -59,6 +65,40 @@ if (window.SpeechRecognition) {
     }
 
     checkForSwearWords(transcript.toLowerCase());
+  };
+
+  recognition.onend = () => {
+    console.log('Speech recognition ended');
+    if (isListening && !isPaused) {
+      // Restart recognition after a short delay
+      setTimeout(() => {
+        startRecognition();
+      }, 500);
+    }
+  };
+
+  recognition.onerror = (event) => {
+    console.error('Speech Recognition Error:', event.error);
+    if (event.error === 'no-speech' || event.error === 'aborted' || event.error === 'network') {
+      // Handle common errors by attempting to restart recognition
+      if (isListening && !isPaused) {
+        setTimeout(() => {
+          startRecognition();
+        }, 500);
+      }
+    } else if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+      alert('Microphone access was denied. Please allow access and try again.');
+      isListening = false;
+      isPaused = false;
+      listeningStatus.textContent = 'No';
+      startButton.textContent = 'Start Listening';
+    } else {
+      // Stop listening on unrecoverable errors
+      isListening = false;
+      isPaused = false;
+      listeningStatus.textContent = 'No';
+      startButton.textContent = 'Start Listening';
+    }
   };
 
   function checkForSwearWords(speech) {
@@ -84,36 +124,20 @@ if (window.SpeechRecognition) {
 
     // Pause listening temporarily
     isPaused = true;
-    recognition.stop();
+    recognition.abort();
+    listeningStatus.textContent = 'No';
+    startButton.textContent = 'Start Listening';
 
     // Hide the message and resume listening after 5 seconds
     setTimeout(() => {
       messageElement.style.display = 'none';
-      // Resume listening if still intended to be listening
+      isPaused = false;
       if (isListening) {
-        isPaused = false;
-        recognition.start();
+        startRecognition();
       }
     }, 5000);
   }
 
-  recognition.onend = () => {
-    if (isListening && !isPaused) {
-      // Automatically restart recognition if it stopped unexpectedly
-      recognition.start();
-    }
-  };
-
-  recognition.onerror = (event) => {
-    console.error('Speech Recognition Error:', event.error);
-    if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-      alert('Microphone access was denied. Please allow access and try again.');
-      recognition.stop();
-      isListening = false;
-      listeningStatus.textContent = 'No';
-      startButton.textContent = 'Start Listening';
-    }
-  };
 } else {
   alert('Sorry, your browser does not support speech recognition.');
 }
