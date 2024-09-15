@@ -16,7 +16,8 @@ if (window.SpeechRecognition) {
   const toggleWordsButton = document.getElementById('toggle-words-button');
   const detectedWordsElement = document.getElementById('detected-words');
 
-  const swearWords = ['shit', 's***', 'c***', 'bullshit', 'fucked', 'f*****', 'b*******',  'f******', 'dam', 'f***', 'cunt', 'prick', 'fucking', 'fuck']; // Replace with your list
+  // Replace 'badword1', 'badword2', etc., with the actual words you want to detect
+  const swearWords = ['f***', 'fuck', 'shit', 's***'];
 
   startButton.addEventListener('click', () => {
     if (isListening) {
@@ -65,7 +66,9 @@ if (window.SpeechRecognition) {
 
   function playWarningSound() {
     warningSound.currentTime = 0; // Reset to start
-    warningSound.play();
+    warningSound.play().catch(error => {
+      console.error("Playback failed:", error);
+    });
   }
 
   function showWarningMessage() {
@@ -83,14 +86,11 @@ if (window.SpeechRecognition) {
       messageElement.style.display = 'none';
       // Resume listening
       startRecognition();
-    }, 6000);
+    }, 5000);
   }
 
   recognition.onend = () => {
-    if (isListening) {
-      // Automatically restart recognition if it's supposed to be listening
-      recognition.start();
-    }
+    // Do nothing here because we control when recognition starts
   };
 
   recognition.onerror = (event) => {
