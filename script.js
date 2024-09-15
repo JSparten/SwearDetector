@@ -3,8 +3,8 @@ window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogn
 
 if (window.SpeechRecognition) {
   const recognition = new window.SpeechRecognition();
-  recognition.continuous = false; // Set to false to manually control when to start
-  recognition.interimResults = false;
+  recognition.continuous = true; // Set to true for continuous listening
+  recognition.interimResults = true; // Set to true to show interim results
 
   let isListening = false;
   let showDetectedWords = false;
@@ -17,8 +17,7 @@ if (window.SpeechRecognition) {
   const detectedWordsElement = document.getElementById('detected-words');
 
   // Replace 'badword1', 'badword2', etc., with the actual words you want to detect
-  const swearWords = ['f***', 'fuck', 'shit', 's***','f*****', 'f******', 'b*******', 'dam', 'fucked', 'fucking',
-                      'c***', 'cunt', 'piss', 'p***', 'prick', 'p****', 'bullshit', 'cock', 'wanker', 'w*****',];
+  const swearWords = ['badword1', 'badword2', 'badword3'];
 
   startButton.addEventListener('click', () => {
     if (isListening) {
@@ -48,11 +47,17 @@ if (window.SpeechRecognition) {
   }
 
   recognition.onresult = (event) => {
-    const transcript = event.results[0][0].transcript.toLowerCase();
+    let transcript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const result = event.results[i];
+      transcript += result[0].transcript;
+    }
+
     if (showDetectedWords) {
       detectedWordsElement.textContent = `Detected Words: ${transcript}`;
     }
-    checkForSwearWords(transcript);
+
+    checkForSwearWords(transcript.toLowerCase());
   };
 
   function checkForSwearWords(speech) {
@@ -76,7 +81,7 @@ if (window.SpeechRecognition) {
     messageElement.textContent = 'You have been fined one credit';
     messageElement.style.display = 'block';
 
-    // Stop listening
+    // Stop listening temporarily
     recognition.stop();
     isListening = false;
     listeningStatus.textContent = 'No';
@@ -89,10 +94,6 @@ if (window.SpeechRecognition) {
       startRecognition();
     }, 5000);
   }
-
-  recognition.onend = () => {
-    // Do nothing here because we control when recognition starts
-  };
 
   recognition.onerror = (event) => {
     console.error('Speech Recognition Error:', event.error);
