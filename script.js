@@ -17,7 +17,8 @@ if (window.SpeechRecognition) {
   const detectedWordsElement = document.getElementById('detected-words');
 
   // Replace 'badword1', 'badword2', etc., with the actual words you want to detect
-  const swearWords = ['f***', 'fuck', 'shit', 's***'];
+  const swearWords = ['f***', 'fuck', 'shit', 's***','f*****', 'f******', 'b*******', 'dam', 'fucked', 'fucking',
+                      'c***', 'cunt', 'piss', 'p***', 'prick', 'p****', 'bullshit', 'cock', 'wanker', 'w*****',];
 
   startButton.addEventListener('click', () => {
     if (isListening) {
