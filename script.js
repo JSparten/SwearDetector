@@ -1,12 +1,13 @@
-// Check if browser supports Speech Recognition
+// Check if the browser supports Speech Recognition
 window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (window.SpeechRecognition) {
   const recognition = new window.SpeechRecognition();
-  recognition.continuous = true; // Set to true for continuous listening
-  recognition.interimResults = true; // Set to true to show interim results
+  recognition.continuous = true; // Enable continuous listening
+  recognition.interimResults = true; // Enable interim results
 
   let isListening = false;
+  let isPaused = false;
   let showDetectedWords = false;
 
   const startButton = document.getElementById('start-button');
@@ -16,7 +17,7 @@ if (window.SpeechRecognition) {
   const toggleWordsButton = document.getElementById('toggle-words-button');
   const detectedWordsElement = document.getElementById('detected-words');
 
-  // Replace 'badword1', 'badword2', etc., with the actual words you want to detect
+  // Replace with the actual words you want to detect
   const swearWords = ['badword1', 'badword2', 'badword3'];
 
   startButton.addEventListener('click', () => {
@@ -28,6 +29,8 @@ if (window.SpeechRecognition) {
       startButton.textContent = 'Start Listening';
     } else {
       // Start listening
+      isListening = true;
+      isPaused = false;
       startRecognition();
     }
   });
@@ -40,7 +43,6 @@ if (window.SpeechRecognition) {
 
   function startRecognition() {
     recognition.start();
-    isListening = true;
     listeningStatus.textContent = 'Yes';
     startButton.textContent = 'Stop Listening';
     messageElement.textContent = '';
@@ -49,8 +51,7 @@ if (window.SpeechRecognition) {
   recognition.onresult = (event) => {
     let transcript = '';
     for (let i = event.resultIndex; i < event.results.length; i++) {
-      const result = event.results[i];
-      transcript += result[0].transcript;
+      transcript += event.results[i][0].transcript;
     }
 
     if (showDetectedWords) {
@@ -72,8 +73,8 @@ if (window.SpeechRecognition) {
 
   function playWarningSound() {
     warningSound.currentTime = 0; // Reset to start
-    warningSound.play().catch(error => {
-      console.error("Playback failed:", error);
+    warningSound.play().catch((error) => {
+      console.error('Playback failed:', error);
     });
   }
 
@@ -81,19 +82,27 @@ if (window.SpeechRecognition) {
     messageElement.textContent = 'You have been fined one credit';
     messageElement.style.display = 'block';
 
-    // Stop listening temporarily
+    // Pause listening temporarily
+    isPaused = true;
     recognition.stop();
-    isListening = false;
-    listeningStatus.textContent = 'No';
-    startButton.textContent = 'Start Listening';
 
     // Hide the message and resume listening after 5 seconds
     setTimeout(() => {
       messageElement.style.display = 'none';
-      // Resume listening
-      startRecognition();
+      // Resume listening if still intended to be listening
+      if (isListening) {
+        isPaused = false;
+        recognition.start();
+      }
     }, 5000);
   }
+
+  recognition.onend = () => {
+    if (isListening && !isPaused) {
+      // Automatically restart recognition if it stopped unexpectedly
+      recognition.start();
+    }
+  };
 
   recognition.onerror = (event) => {
     console.error('Speech Recognition Error:', event.error);
@@ -105,19 +114,11 @@ if (window.SpeechRecognition) {
       startButton.textContent = 'Start Listening';
     }
   };
-
-  // Add the onend event handler to restart recognition when it stops unexpectedly
-  recognition.onend = () => {
-    if (isListening) {
-      // Automatically restart recognition if it stopped unexpectedly
-      recognition.start();
-    }
-  };
 } else {
   alert('Sorry, your browser does not support speech recognition.');
 }
 
 // Initialize particles.js
-particlesJS.load('particles-js', 'particles.json', function() {
+particlesJS.load('particles-js', 'particles.json', () => {
   console.log('particles.js loaded - callback');
 });
