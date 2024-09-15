@@ -75,7 +75,7 @@ if (window.SpeechRecognition) {
       // Restart recognition after a short delay
       setTimeout(() => {
         startRecognition();
-      }, 500);
+      }, 100);
     }
   };
 
@@ -86,7 +86,7 @@ if (window.SpeechRecognition) {
       if (isListening && !isPaused) {
         setTimeout(() => {
           startRecognition();
-        }, 500);
+        }, 100);
       }
     } else if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
       alert('Microphone access was denied. Please allow access and try again.');
