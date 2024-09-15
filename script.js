@@ -105,6 +105,14 @@ if (window.SpeechRecognition) {
       startButton.textContent = 'Start Listening';
     }
   };
+
+  // Add the onend event handler to restart recognition when it stops unexpectedly
+  recognition.onend = () => {
+    if (isListening) {
+      // Automatically restart recognition if it stopped unexpectedly
+      recognition.start();
+    }
+  };
 } else {
   alert('Sorry, your browser does not support speech recognition.');
 }
