@@ -14,16 +14,16 @@
       "type": "circle"
     },
     "opacity": {
-      "value": 0.6,
+      "value": 0.7,
       "random": true
     },
     "size": {
-      "value": 2,
+      "value": 4,
       "random": true
     },
     "move": {
       "enable": true,
-      "speed": 0.8,
+      "speed": 0.9,
       "direction": "none",
       "random": true,
       "straight": false,
