@@ -145,6 +145,6 @@ if (window.SpeechRecognition) {
 }
 
 // Initialize particles.js
-particlesJS.load('particles-js', 'particles.json', () => {
+particlesJS.load('particles-js', 'particles.json', function() {
   console.log('particles.js loaded - callback');
 });
