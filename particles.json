@@ -39,11 +39,11 @@
     "events": {
       "onhover": {
         "enable": true,
-        "mode": "repulse"  // You can choose modes like "grab", "bubble", etc.
+        "mode": "repulse"  
       },
       "onclick": {
         "enable": false,
-        "mode": "push"  // Even if disabled, it's good practice to define the mode
+        "mode": "push"  
       },
       "resize": true
     },
@@ -55,7 +55,7 @@
       "push": {
         "particles_nb": 4
       }
-      // Add other modes as needed
+      
     }
   },
   "retina_detect": true
