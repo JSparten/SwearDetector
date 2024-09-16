@@ -37,7 +37,7 @@
   "interactivity": {
     "detect_on": "canvas",
     "events": {
-      "onhover": true
+      "onhover": true,
         "enable": true
       },
       "onclick": {
