@@ -23,7 +23,7 @@
     },
     "move": {
       "enable": true,
-      "speed": 1.9,
+      "speed": 3.9,
       "direction": "none",
       "random": true,
       "straight": false,
@@ -38,7 +38,7 @@
     "detect_on": "canvas",
     "events": {
       "onhover": {
-        "enable": false
+        "enable": true
       },
       "onclick": {
         "enable": false
