@@ -8,7 +8,7 @@
       }
     },
     "color": {
-      "value": "#ffffff"
+      "value": "#00ffff"
     },
     "shape": {
       "type": "circle"
@@ -23,7 +23,7 @@
     },
     "move": {
       "enable": true,
-      "speed": 3.9,
+      "speed": 5.9,
       "direction": "none",
       "random": true,
       "straight": false,
@@ -37,13 +37,13 @@
   "interactivity": {
     "detect_on": "canvas",
     "events": {
-      "onhover": {
+      "onhover": true
         "enable": true
       },
       "onclick": {
         "enable": false
       }
     }
-  },
+  ,
   "retina_detect": true
 }
