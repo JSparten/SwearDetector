@@ -37,13 +37,26 @@
   "interactivity": {
     "detect_on": "canvas",
     "events": {
-      "onhover": true,
-        "enable": true
+      "onhover": {
+        "enable": true,
+        "mode": "repulse"  // You can choose modes like "grab", "bubble", etc.
       },
       "onclick": {
-        "enable": false
+        "enable": false,
+        "mode": "push"  // Even if disabled, it's good practice to define the mode
+      },
+      "resize": true
+    },
+    "modes": {
+      "repulse": {
+        "distance": 200,
+        "duration": 0.4
+      },
+      "push": {
+        "particles_nb": 4
       }
+      // Add other modes as needed
     }
-  ,
+  },
   "retina_detect": true
 }
