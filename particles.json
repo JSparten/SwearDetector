@@ -1,7 +1,7 @@
 {
   "particles": {
     "number": {
-      "value": 150,  // Increased from 80 to 150
+      "value": 150, 
       "density": {
         "enable": true,
         "value_area": 1200
@@ -23,7 +23,7 @@
     },
     "move": {
       "enable": true,
-      "speed": 9.0,  // Increased speed from 5.9 to 9.0
+      "speed": 9.0,  
       "direction": "none",
       "random": true,
       "straight": false,
@@ -35,7 +35,7 @@
     }
   },
   "interactivity": {
-    "detect_on": "window",  // Changed from "canvas" to "window" for better mobile support
+    "detect_on": "window", 
     "events": {
       "onhover": {
         "enable": true,
@@ -49,7 +49,7 @@
     },
     "modes": {
       "repulse": {
-        "distance": 150,  // Adjusted for responsive interaction
+        "distance": 150, 
         "duration": 0.4
       },
       "push": {
